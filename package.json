@@ -1,0 +1,31 @@
+{
+  "name": "fs-rank",
+  "version": "1.0.0",
+  "description": "get web ranks for the websites in a Freemius account",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sweetcode-com/fs-rank.git"
+  },
+  "author": "Aleksandar Vucenovic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sweetcode-com/fs-rank/issues"
+  },
+  "homepage": "https://github.com/sweetcode-com/fs-rank#readme",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.1",
+    "fetch-retry": "^5.0.2",
+    "freemius-node-sdk": "github:Freemius/freemius-node-sdk",
+    "node-fetch": "^3.2.6"
+  },
+  "type": "module"
+}
