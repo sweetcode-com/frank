@@ -16,6 +16,8 @@ Get web ranks for the websites in a Freemius account
 3. `npm i`
 4. Create a .env file (copy the .env.example file) and fill in all settings
 
+5. If the repo was updated after your first install use `git pull` to get the current version.
+
 ## How to use
 
 `node frank.js`
