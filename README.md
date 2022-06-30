@@ -7,7 +7,7 @@ Get web ranks for the websites in a Freemius account
 
 - node 
 - Freemius account
-- Similarweb account (create an API key in the settings)
+- [Similarweb](https://www.similarweb.com/) account (create an API key in the settings)
 
 ## Installation 
 
