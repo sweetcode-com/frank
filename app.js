@@ -55,7 +55,7 @@ const get_web_ranks_for_all_installs = async (arr = []) => {
                 // return
             } else if (rank_data.error_code === 403) {
                 console.log("The limit of monthly data points has been reached")
-                // return
+                return
             } else if (rank_data.error_code === 404) {
                 stream.write(domain + "," + "no rank" + EOL)
             } else {
@@ -102,7 +102,7 @@ async function run(arr = []) {
         get_web_ranks_for_all_installs(arr)
     } else {
         console.log("monthly SimilarWeb API limit reached")
-        get_web_ranks_for_all_installs(arr)
+        // get_web_ranks_for_all_installs(arr)
     }
 }
 
