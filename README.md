@@ -11,7 +11,7 @@ Get web ranks for the websites in a Freemius account
 
 ## Installation 
 
-1. Change to the folder where you want to install the repo
+1. `cd` into the folder where you want to install the repo
 2. `git clone https://github.com/sweetcode-com/fs-rank.git`
 3. `npm i`
 4. Create a .env file (copy the .env.example file) and fill in all settings
