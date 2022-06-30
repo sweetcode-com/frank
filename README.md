@@ -1,4 +1,4 @@
-# fs-rank
+# frank
 
 Get web ranks for the websites in a Freemius account
 
@@ -12,13 +12,13 @@ Get web ranks for the websites in a Freemius account
 ## Installation 
 
 1. `cd` into the folder where you want to install the repo
-2. `git clone https://github.com/sweetcode-com/fs-rank.git`
+2. `git clone https://github.com/sweetcode-com/frank.git`
 3. `npm i`
 4. Create a .env file (copy the .env.example file) and fill in all settings
 
 ## How to use
 
-`node app.js`
+`node frank.js`
 
 The app will output a csv file under the `output` folder. It will contain all domains and ranks for which Similarweb provided a rank.
 
