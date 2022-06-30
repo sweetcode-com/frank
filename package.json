@@ -1,23 +1,23 @@
 {
-  "name": "fs-rank",
+  "name": "frank",
   "version": "1.0.0",
-  "description": "get web ranks for the websites in a Freemius account",
+  "description": "Get web ranks for the websites in a Freemius account",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon app.js",
-    "start": "node app.js",
+    "dev": "nodemon frank.js",
+    "start": "node frank.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sweetcode-com/fs-rank.git"
+    "url": "git+https://github.com/sweetcode-com/frank.git"
   },
   "author": "Aleksandar Vucenovic",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/sweetcode-com/fs-rank/issues"
+    "url": "https://github.com/sweetcode-com/frank/issues"
   },
-  "homepage": "https://github.com/sweetcode-com/fs-rank#readme",
+  "homepage": "https://github.com/sweetcode-com/frank#readme",
   "dependencies": {
     "body-parser": "^1.20.0",
     "crypto": "^1.0.1",
