@@ -28,9 +28,14 @@ Don't expect ranks for all domains. In my tests Similarweb only had ranks for ap
 
 By default the app will only filter for installs that are marked active (the plugin is in active use). You can change this in the code if you want to query other types: all , active , inactive , trial , paying , uninstalled , active_premium , active_free
 
-If you want to change the output folder or file name, you can change this in the code too. 
-
-With thousands of domains, retrieving all ranks can be slow. I didn't parallelize the retrieval from Similarweb, which could have been much faster, because I didn't want the app to run into a rate limit by Similarweb.
+With thousands of domains, retrieving all ranks can be slow. Similar web has a 10 requests per second rate limit.
 
 The monthly free API limit is at 5'000 calls per month: https://support.similarweb.com/hc/en-us/articles/4414317910929-Website-DigitalRank-API 
 If the website is not yet ranked by Similarweb, the API call doesn't count against the monthly API limit. 
+
+The app will read the existing file and only update domains that are not in the file yet. 
+If you want to re-run all domains, simply delete the file and run the app. 
+
+## Troubleshooting 
+
+Make sure to update node `npm update -g npm`
