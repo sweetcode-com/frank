@@ -62,13 +62,14 @@ const authorizedRequestObject = (requestURI) => {
 /**
  * https://freemius.docs.apiary.io/#reference/installs-/-a.k.a.-sites
  * 
- * filter: all , active , inactive , trial , paying , uninstalled , active_premium , active_free .
+ * filter: all , active , inactive , trial , paying , uninstalled , active_premium , active_free
  */
-const get_installs = async function (count = 50, offset = 0) {
+const get_installs = async (count = 50, offset = 0, filter = "active") => {
     // return await fetch_retry(endpoint + "/v1/developers/10359/plugins/7498/subscriptions.json", authorizedRequestObject(pricingUri), 10)
-    const response = await fetch_retry(endpoint + installsUri + `?fields=url&count=${count}&offset=${offset}`, authorizedRequestObject(installsUri), 10)
+    return await fetch_retry(endpoint + installsUri + `?fields=url&filter=${filter}&count=${count}&offset=${offset}`, authorizedRequestObject(installsUri), 10)
     const response_data = await response.json()
-    console.log(response_data)
+    // console.log(response_data)
+    return response_data
 }
 
 export {
