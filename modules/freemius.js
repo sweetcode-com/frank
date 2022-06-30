@@ -7,7 +7,7 @@
 
 import 'dotenv/config'
 import fetch from "node-fetch"
-import { fetch_retry } from './helpers.js';
+import { fetch_retry } from '../helpers.js';
 const { createHmac } = await import('crypto');
 
 const endpoint = "https://api.freemius.com"

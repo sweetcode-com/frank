@@ -22,9 +22,11 @@
     "body-parser": "^1.20.0",
     "crypto": "^1.0.1",
     "crypto-js": "^4.1.1",
+    "csv-parse": "^5.2.1",
     "dotenv": "^16.0.1",
     "fetch-retry": "^5.0.2",
     "freemius-node-sdk": "github:Freemius/freemius-node-sdk",
+    "limiter": "2.0.1",
     "node-fetch": "^3.2.6"
   },
   "type": "module"

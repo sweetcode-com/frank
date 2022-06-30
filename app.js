@@ -1,40 +1,20 @@
 import 'dotenv/config'
-import { get_installs } from './freemius.js'
+import { get_installs } from './modules/freemius.js'
 import * as fs from 'fs'
 import { EOL } from 'os'
+import { get_rank_for_url, get_sw_remaining_api_requests } from './modules/similarweb.js'
+import { parse } from 'csv-parse'
 
+var stream
 
-const get_rank_for_url = async (domain) => {
-
-    let requestOptions = {
-        method: 'GET',
-        redirect: 'follow'
-    };
-
-    let response = await fetch(`https://api.similarweb.com/v1/similar-rank/${domain}/rank?api_key=${process.env.SW_API_KEY}`, requestOptions)
-
-    if(!response.ok) return false
-
-    const response_data = await response.json()
-
-    if (response_data.meta.error_code === 401) {
-        return false
-    } else {
-        // console.log("rank: " + response_data.similar_rank.rank)
-        return response_data.similar_rank.rank
-    }
-}
-
-const get_web_ranks_for_all_installs = async () => {
+const get_web_ranks_for_all_installs = async (arr = []) => {
 
     let count = 50
     let offset = 0
 
-    var stream = fs.createWriteStream("output/ranks.csv", { flags: 'a' });
-
     while (true) {
 
-        console.log("offset: " + offset )
+        console.log("offset: " + offset)
 
         let result = await get_installs(count, offset)
 
@@ -50,22 +30,80 @@ const get_web_ranks_for_all_installs = async () => {
 
             let domain = install.url.replace(/https?:\/\//, "")
 
-            let rank = await get_rank_for_url(domain)
+            if (arr.includes(domain)) continue
 
-            if (rank) {
-                console.log("Rank for domain " + domain + ": " + rank)
-                stream.write(domain + "," + rank + EOL)
+            // console.log("domain: " + domain)
+
+            let rank_data
+
+            for (let i = 0; i < 5; i++) {
+
+                rank_data = await get_rank_for_url(domain)
+
+                if (rank_data.error_code !== 429) {
+                    break
+                }
+
+                // wait one second before retrying
+                await new Promise(res => setTimeout(res, 1000))
+            }
+
+            // console.log(rank_data)
+
+            if (rank_data.error_code === 401) {
+                console.log("Some error")
+                // return
+            } else if (rank_data.error_code === 403) {
+                console.log("The limit of monthly data points has been reached")
+                // return
+            } else if (rank_data.error_code === 404) {
+                stream.write(domain + "," + "no rank" + EOL)
             } else {
-                // console.log("No rank for domain " + domain)
+                // console.log(rank_data)
+                stream.write(domain + "," + rank_data.rank + EOL)
             }
         }
 
-        // break;
+        // break
     }
 }
 
+if (fs.existsSync('output' + '/ranks.csv')) {
+
+    let parser = parse({ delimiter: ',' });
+
+    let arr = []
+
+    fs.createReadStream('output' + '/ranks.csv')
+        .pipe(parser)
+        .on('data', (r) => {
+            arr.push(r[0])
+        })
+        .on('end', () => {
+            stream = fs.createWriteStream("output/ranks.csv", { flags: 'a' });
+            run(arr)
+        })
+}
+else {
+    stream = fs.createWriteStream("output/ranks.csv", { flags: 'a' });
+    stream.write("domain, rank" + EOL)
+    run()
+}
+
+
 fs.mkdir('output', { recursive: true }, (err) => {
-    if (err) throw err;
+    if (err) throw err
 });
 
-get_web_ranks_for_all_installs()
+
+async function run(arr = []) {
+
+    if (await get_sw_remaining_api_requests() > 0) {
+        get_web_ranks_for_all_installs(arr)
+    } else {
+        console.log("monthly SimilarWeb API limit reached")
+        get_web_ranks_for_all_installs(arr)
+    }
+}
+
+
