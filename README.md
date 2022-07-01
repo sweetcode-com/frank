@@ -26,7 +26,7 @@ The app will output a csv file under the `output` folder. It will contain all do
 
 ## Info
 
-- Don't expect ranks for all domains. In my tests Similarweb only had ranks for approximately 20% of the domains for my plugin. 
+- Don't expect ranks for all domains. In my tests Similarweb only had ranks for approximately 25% of the domains for my plugin. 
 
 - By default the app will only filter for installs that are marked active (the plugin is in active use). You can change this in the code if you want to query other types: `all` , `active` , `inactive` , `trial` , `paying` , `uninstalled` , `active_premium` , `active_free`
 
