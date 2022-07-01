@@ -39,4 +39,7 @@ If you want to re-run all domains, simply delete the file and run the app.
 
 ## Troubleshooting 
 
-Make sure to update node `npm update -g npm`
+The plugin has been tested with node v18.4.0
+Before anything else, make sure that you are running a current version of node `npm -v`
+
+With the following command you should be able update to the newest version `npm update -g npm`
