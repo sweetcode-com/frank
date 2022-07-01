@@ -79,35 +79,35 @@ async function run(arr = []) {
 }
 
 
-// if (fs.existsSync('output' + '/ranks.csv')) {
+if (fs.existsSync('output' + '/ranks.csv')) {
 
-//     let parser = parse({ delimiter: ',' });
+    let parser = parse({ delimiter: ',' });
 
-//     let arr = []
+    let arr = []
 
-//     fs.createReadStream('output' + '/ranks.csv')
-//         .pipe(parser)
-//         .on('data', (r) => {
-//             arr.push(r[0])
-//         })
-//         .on('end', () => {
-//             fileStream = fs.createWriteStream("output/ranks.csv", { flags: 'a' });
-//             run(arr)
-//         })
-// } else {
-//     fileStream = fs.createWriteStream("output/ranks.csv", { flags: 'a' });
-//     fileStream.write("domain, rank" + EOL)
-//     run()
-// }
-
-
-// fs.mkdir('output', { recursive: true }, (err) => {
-//     if (err) throw err
-// });
+    fs.createReadStream('output' + '/ranks.csv')
+        .pipe(parser)
+        .on('data', (r) => {
+            arr.push(r[0])
+        })
+        .on('end', () => {
+            fileStream = fs.createWriteStream("output/ranks.csv", { flags: 'a' });
+            run(arr)
+        })
+} else {
+    fileStream = fs.createWriteStream("output/ranks.csv", { flags: 'a' });
+    fileStream.write("domain, rank" + EOL)
+    run()
+}
 
 
+fs.mkdir('output', { recursive: true }, (err) => {
+    if (err) throw err
+});
 
 
-let result = await get_installs(1, 0)
-let resultJson = await result.json()
-console.log(resultJson)
+
+
+// let result = await get_installs(1, 0)
+// let resultJson = await result.json()
+// console.log(resultJson)
