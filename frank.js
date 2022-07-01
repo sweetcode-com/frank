@@ -10,7 +10,7 @@ import * as stream from 'stream'
 import { parse } from 'csv-parse/sync'
 
 let fileStream
-const fsCount = 5
+const fsCount = 50
 const outputFolder = "output"
 const outputFile = "ranks.csv"
 const pipeline = util.promisify(stream.pipeline)
