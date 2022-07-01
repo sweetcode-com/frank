@@ -1,23 +1,30 @@
 import 'dotenv/config'
 import { get_installs } from './modules/freemius.js'
 import * as fs from 'fs'
+import * as fsp from 'node:fs/promises'
 import { EOL } from 'os'
 import { get_rank_for_url, get_sw_remaining_api_requests } from './modules/similarweb.js'
-import { parse } from 'csv-parse'
+// import { parse } from 'csv-parse'
+import * as util from 'util'
+import * as stream from 'stream'
+import { parse } from 'csv-parse/sync'
 
 let fileStream
-const fsCount = 50
-let fsOffset = 0
+const fsCount = 5
 const outputFolder = "output"
 const outputFile = "ranks.csv"
+const pipeline = util.promisify(stream.pipeline)
 
-const get_web_ranks_for_all_installs = async (existingDomains = []) => {
+
+const get_web_ranks_for_all_installs = async (pluginId, existingDomains = []) => {
+
+    let fsOffset = 0
 
     while (true) {
 
         console.log("offset: " + fsOffset)
 
-        let result = await get_installs(fsCount, fsOffset)
+        let result = await get_installs(pluginId, fsCount, fsOffset)
 
         if (!result.ok) break;
 
@@ -30,7 +37,7 @@ const get_web_ranks_for_all_installs = async (existingDomains = []) => {
         for (const install of data.installs) {
 
             let domain = install.url
-            
+
             domain = domain.replace(/https?:\/\//, "")
             domain = domain.replace(/\/.*/, "")
 
@@ -73,10 +80,10 @@ const get_web_ranks_for_all_installs = async (existingDomains = []) => {
     }
 }
 
-async function run(existingDomains = []) {
+async function run(pluginId, existingDomains = []) {
 
     if (await get_sw_remaining_api_requests() > 0) {
-        get_web_ranks_for_all_installs(existingDomains)
+        await get_web_ranks_for_all_installs(pluginId, existingDomains)
     } else {
         console.log("monthly SimilarWeb API limit reached")
     }
@@ -86,23 +93,25 @@ fs.mkdir(outputFolder, { recursive: true }, (err) => {
     if (err) throw err
 });
 
-if (fs.existsSync(outputFolder + '/' + outputFile)) {
+for (const pluginId of process.env.FS_API_PLUGIN_ID.split(',')) {
 
-    let parser = parse({ delimiter: ',' });
+    console.log('plugin ID: ' + pluginId)
 
-    let existingDomains = []
+    if (fs.existsSync(outputFolder + '/' + outputFile)) {
 
-    fs.createReadStream(outputFolder + '/' + outputFile)
-        .pipe(parser)
-        .on('data', (r) => {
-            existingDomains.push(r[0])
+        let file = fs.readFileSync(outputFolder + '/' + outputFile, { encoding: 'utf8', flag: 'r' })
+
+        let existingDomains = parse(file, {
+            delimiter: ',',
+            skip_empty_lines: true,
         })
-        .on('end', () => {
-            fileStream = fs.createWriteStream(outputFolder + '/' + outputFile, { flags: 'a' });
-            run(existingDomains)
-        })
-} else {
-    fileStream = fs.createWriteStream(outputFolder + '/' + outputFile, { flags: 'a' });
-    fileStream.write("domain, rank" + EOL)
-    run()
+
+        fileStream = fs.createWriteStream(outputFolder + '/' + outputFile, { flags: 'a' })
+        await run(pluginId, existingDomains)
+
+    } else {
+        fileStream = fs.createWriteStream(outputFolder + '/' + outputFile, { flags: 'a' });
+        fileStream.write("domain, rank" + EOL)
+        await run(pluginId)
+    }
 }

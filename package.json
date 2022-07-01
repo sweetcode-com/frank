@@ -24,7 +24,8 @@
     "dotenv": "^16.0.1",
     "fetch-retry": "^5.0.2",
     "limiter": "2.0.1",
-    "node-fetch": "^3.2.6"
+    "node-fetch": "^3.2.6",
+    "nodemon": "^2.0.18"
   },
   "type": "module"
 }

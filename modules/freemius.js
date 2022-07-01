@@ -11,7 +11,10 @@ const { createHmac } = await import('node:crypto');
 
 const freemiusEndpoint = "https://api.freemius.com"
 
-const installsUri = "/v1/developers/" + process.env.FS_API_DEVELOPER_ID + "/plugins/" + process.env.FS_API_PLUGIN_ID + "/installs.json"
+function getInstallsUri(pluginId) {
+
+    return "/v1/developers/" + process.env.FS_API_DEVELOPER_ID + "/plugins/" + pluginId + "/installs.json"
+}
 
 const authorizedRequestObject = (requestURI) => {
 
@@ -56,8 +59,8 @@ const authorizedRequestObject = (requestURI) => {
  * 
  * filter: all , active , inactive , trial , paying , uninstalled , active_premium , active_free
  */
-const get_installs = async (count = 50, offset = 0, filter = "active") => {
-    return await fetch_retry(freemiusEndpoint + installsUri + `?fields=url&filter=${filter}&count=${count}&offset=${offset}`, authorizedRequestObject(installsUri), 10)
+const get_installs = async (pluginId, count = 50, offset = 0, filter = "active") => {
+    return await fetch_retry(freemiusEndpoint + getInstallsUri(pluginId) + `?fields=url&filter=${filter}&count=${count}&offset=${offset}`, authorizedRequestObject(getInstallsUri(pluginId)), 10)
 }
 
 export {
