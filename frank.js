@@ -29,11 +29,15 @@ const get_web_ranks_for_all_installs = async (existingDomains = []) => {
 
         for (const install of data.installs) {
 
-            let domain = install.url.replace(/https?:\/\//, "")
+            let domain = install.url
+            
+            domain = domain.replace(/https?:\/\//, "")
+            domain = domain.replace(/\/.*/, "")
+
+            // console.log("domain: " + domain)
 
             if (existingDomains.includes(domain)) continue
 
-            // console.log("domain: " + domain)
 
             let rank_data
 
