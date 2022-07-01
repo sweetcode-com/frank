@@ -5,7 +5,7 @@ import { EOL } from 'os'
 import { get_rank_for_url, get_sw_remaining_api_requests } from './modules/similarweb.js'
 import { parse } from 'csv-parse'
 
-var stream
+var fileStream
 
 const get_web_ranks_for_all_installs = async (arr = []) => {
 
@@ -57,44 +57,16 @@ const get_web_ranks_for_all_installs = async (arr = []) => {
                 console.log("The limit of monthly data points has been reached")
                 return
             } else if (rank_data.error_code === 404) {
-                stream.write(domain + "," + "no rank" + EOL)
+                fileStream.write(domain + "," + "no rank" + EOL)
             } else {
                 // console.log(rank_data)
-                stream.write(domain + "," + rank_data.rank + EOL)
+                fileStream.write(domain + "," + rank_data.rank + EOL)
             }
         }
 
         // break
     }
 }
-
-if (fs.existsSync('output' + '/ranks.csv')) {
-
-    let parser = parse({ delimiter: ',' });
-
-    let arr = []
-
-    fs.createReadStream('output' + '/ranks.csv')
-        .pipe(parser)
-        .on('data', (r) => {
-            arr.push(r[0])
-        })
-        .on('end', () => {
-            stream = fs.createWriteStream("output/ranks.csv", { flags: 'a' });
-            run(arr)
-        })
-}
-else {
-    stream = fs.createWriteStream("output/ranks.csv", { flags: 'a' });
-    stream.write("domain, rank" + EOL)
-    run()
-}
-
-
-fs.mkdir('output', { recursive: true }, (err) => {
-    if (err) throw err
-});
-
 
 async function run(arr = []) {
 
@@ -107,3 +79,35 @@ async function run(arr = []) {
 }
 
 
+// if (fs.existsSync('output' + '/ranks.csv')) {
+
+//     let parser = parse({ delimiter: ',' });
+
+//     let arr = []
+
+//     fs.createReadStream('output' + '/ranks.csv')
+//         .pipe(parser)
+//         .on('data', (r) => {
+//             arr.push(r[0])
+//         })
+//         .on('end', () => {
+//             fileStream = fs.createWriteStream("output/ranks.csv", { flags: 'a' });
+//             run(arr)
+//         })
+// } else {
+//     fileStream = fs.createWriteStream("output/ranks.csv", { flags: 'a' });
+//     fileStream.write("domain, rank" + EOL)
+//     run()
+// }
+
+
+// fs.mkdir('output', { recursive: true }, (err) => {
+//     if (err) throw err
+// });
+
+
+
+
+let result = await get_installs(1, 0)
+let resultJson = await result.json()
+console.log(resultJson)

@@ -6,11 +6,10 @@
  */
 
 import 'dotenv/config'
-import fetch from "node-fetch"
 import { fetch_retry } from '../helpers.js';
-const { createHmac } = await import('crypto');
+const { createHmac } = await import('node:crypto');
 
-const endpoint = "https://api.freemius.com"
+const freemiusEndpoint = "https://api.freemius.com"
 
 const installsUri = "/v1/developers/" + process.env.FS_API_DEVELOPER_ID + "/plugins/" + process.env.FS_API_PLUGIN_ID + "/installs.json"
 
@@ -66,7 +65,7 @@ const authorizedRequestObject = (requestURI) => {
  */
 const get_installs = async (count = 50, offset = 0, filter = "active") => {
     // return await fetch_retry(endpoint + "/v1/developers/10359/plugins/7498/subscriptions.json", authorizedRequestObject(pricingUri), 10)
-    return await fetch_retry(endpoint + installsUri + `?fields=url&filter=${filter}&count=${count}&offset=${offset}`, authorizedRequestObject(installsUri), 10)
+    return await fetch_retry(freemiusEndpoint + installsUri + `?fields=url&filter=${filter}&count=${count}&offset=${offset}`, authorizedRequestObject(installsUri), 10)
     const response_data = await response.json()
     // console.log(response_data)
     return response_data
