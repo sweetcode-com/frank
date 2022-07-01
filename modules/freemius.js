@@ -15,14 +15,7 @@ const installsUri = "/v1/developers/" + process.env.FS_API_DEVELOPER_ID + "/plug
 
 const authorizedRequestObject = (requestURI) => {
 
-    // const DATE_RFC2822 = "ddd, DD MMM YYYY HH:mm:ss ZZ";
-    // const date = moment(Date.now()).format(DATE_RFC2822)
-
     const date = (new Date(Date.now())).toUTCString()
-
-    // const requestURI = uri
-
-    // const url = endpoint + requestURI
 
     const stringToSign =
         "GET" + "\n" +
@@ -64,11 +57,7 @@ const authorizedRequestObject = (requestURI) => {
  * filter: all , active , inactive , trial , paying , uninstalled , active_premium , active_free
  */
 const get_installs = async (count = 50, offset = 0, filter = "active") => {
-    // return await fetch_retry(endpoint + "/v1/developers/10359/plugins/7498/subscriptions.json", authorizedRequestObject(pricingUri), 10)
     return await fetch_retry(freemiusEndpoint + installsUri + `?fields=url&filter=${filter}&count=${count}&offset=${offset}`, authorizedRequestObject(installsUri), 10)
-    const response_data = await response.json()
-    // console.log(response_data)
-    return response_data
 }
 
 export {

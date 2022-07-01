@@ -5,24 +5,25 @@ import { EOL } from 'os'
 import { get_rank_for_url, get_sw_remaining_api_requests } from './modules/similarweb.js'
 import { parse } from 'csv-parse'
 
-var fileStream
+let fileStream
+const fsCount = 50
+let fsOffset = 0
+const outputFolder = "output"
+const outputFile = "ranks.csv"
 
-const get_web_ranks_for_all_installs = async (arr = []) => {
-
-    let count = 50
-    let offset = 0
+const get_web_ranks_for_all_installs = async (existingDomains = []) => {
 
     while (true) {
 
-        console.log("offset: " + offset)
+        console.log("offset: " + fsOffset)
 
-        let result = await get_installs(count, offset)
+        let result = await get_installs(fsCount, fsOffset)
 
         if (!result.ok) break;
 
         let data = await result.json()
 
-        offset = offset + count
+        fsOffset = fsOffset + fsCount
 
         if (data.installs.length === 0) break;
 
@@ -30,7 +31,7 @@ const get_web_ranks_for_all_installs = async (arr = []) => {
 
             let domain = install.url.replace(/https?:\/\//, "")
 
-            if (arr.includes(domain)) continue
+            if (existingDomains.includes(domain)) continue
 
             // console.log("domain: " + domain)
 
@@ -68,46 +69,36 @@ const get_web_ranks_for_all_installs = async (arr = []) => {
     }
 }
 
-async function run(arr = []) {
+async function run(existingDomains = []) {
 
     if (await get_sw_remaining_api_requests() > 0) {
-        get_web_ranks_for_all_installs(arr)
+        get_web_ranks_for_all_installs(existingDomains)
     } else {
         console.log("monthly SimilarWeb API limit reached")
-        // get_web_ranks_for_all_installs(arr)
     }
 }
 
-
-if (fs.existsSync('output' + '/ranks.csv')) {
-
-    let parser = parse({ delimiter: ',' });
-
-    let arr = []
-
-    fs.createReadStream('output' + '/ranks.csv')
-        .pipe(parser)
-        .on('data', (r) => {
-            arr.push(r[0])
-        })
-        .on('end', () => {
-            fileStream = fs.createWriteStream("output/ranks.csv", { flags: 'a' });
-            run(arr)
-        })
-} else {
-    fileStream = fs.createWriteStream("output/ranks.csv", { flags: 'a' });
-    fileStream.write("domain, rank" + EOL)
-    run()
-}
-
-
-fs.mkdir('output', { recursive: true }, (err) => {
+fs.mkdir(outputFolder, { recursive: true }, (err) => {
     if (err) throw err
 });
 
+if (fs.existsSync(outputFolder + '/' + outputFile)) {
 
+    let parser = parse({ delimiter: ',' });
 
+    let existingDomains = []
 
-// let result = await get_installs(1, 0)
-// let resultJson = await result.json()
-// console.log(resultJson)
+    fs.createReadStream(outputFolder + '/' + outputFile)
+        .pipe(parser)
+        .on('data', (r) => {
+            existingDomains.push(r[0])
+        })
+        .on('end', () => {
+            fileStream = fs.createWriteStream(outputFolder + '/' + outputFile, { flags: 'a' });
+            run(existingDomains)
+        })
+} else {
+    fileStream = fs.createWriteStream(outputFolder + '/' + outputFile, { flags: 'a' });
+    fileStream.write("domain, rank" + EOL)
+    run()
+}

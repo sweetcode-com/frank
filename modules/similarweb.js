@@ -18,7 +18,6 @@ import { RateLimiter } from "limiter";
 
 const limiter = new RateLimiter({ tokensPerInterval: 6, interval: "second" });
 
-
 const get_rank_for_url = async (domain) => {
 
     let requestOptions = {
@@ -65,8 +64,6 @@ const get_rank_for_url = async (domain) => {
             status: "Limit out of range. The field limit must be between 1 and 5000",
             error_code: response_data.meta.error_code,
         }
-
-        return response_data.similar_rank.rank
     }
 
     if (response_data.meta.error_code === 403) {
@@ -76,16 +73,12 @@ const get_rank_for_url = async (domain) => {
         }
     }
 
-   
-
     if (response_data.meta.error_code === 429) {
         return {
             status: "Too many requests made in a short period of time",
             error_code: response_data.meta.error_code,
         }
     }
-
-    // console.log(response)
 
     return {
         status: "Rank found",
