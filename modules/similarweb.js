@@ -10,10 +10,10 @@
  * 429: Too many requests made in a short period of time. This can happen if you make more than 10 requests per second.
  */
 
-import { fetch_retry } from "../helpers.js"
+import { fetch_retry } from '../helpers.js'
 
 //https://www.npmjs.com/package/limiter
-import { RateLimiter } from "limiter";
+import { RateLimiter } from 'limiter'
 
 
 const limiter = new RateLimiter({ tokensPerInterval: 6, interval: "second" });
