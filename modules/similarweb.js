@@ -12,7 +12,9 @@
 
 import { fetch_retry } from '../helpers.js'
 
-//https://www.npmjs.com/package/limiter
+// https://www.npmjs.com/package/limiter
+// https://github.com/jhurliman/node-rate-limiter/issues/80
+// ! version needs to be pinned to 2.0.1 as module import is not working above
 import { RateLimiter } from 'limiter'
 
 

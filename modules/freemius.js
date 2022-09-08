@@ -35,7 +35,7 @@ const authorizedRequestObject = (requestURI) => {
 
     // We need to strip off the = from the end of the encoded string,
     // otherwise authentication will fail.
-    signature = signature.replace(/=/g, "")
+    signature = signature.replace(/=$/g, "")
 
     const authorizationObject = "FS" + " " + process.env.FS_API_DEVELOPER_ID + ":" + process.env.FS_API_DEVELOPER_PUBLIC_KEY + ":" + signature
 
