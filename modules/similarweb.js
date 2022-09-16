@@ -15,10 +15,10 @@ import { fetch_retry } from '../helpers.js'
 // https://www.npmjs.com/package/limiter
 // https://github.com/jhurliman/node-rate-limiter/issues/80
 // ! version needs to be pinned to 2.0.1 as module import is not working above
-import { RateLimiter } from 'limiter'
+// import { RateLimiter } from 'limiter'
 
 
-const limiter = new RateLimiter({ tokensPerInterval: 6, interval: "second" });
+// const limiter = new RateLimiter({ tokensPerInterval: 6, interval: "second" });
 
 const get_rank_for_url = async (domain) => {
 
@@ -27,7 +27,7 @@ const get_rank_for_url = async (domain) => {
         redirect: 'follow'
     };
 
-    const remainingRequests = await limiter.removeTokens(1);
+    // const remainingRequests = await limiter.removeTokens(1);
 
     let response = await fetch_retry(`https://api.similarweb.com/v1/similar-rank/${domain}/rank?api_key=${process.env.SW_API_KEY}`, requestOptions, 3)
 
